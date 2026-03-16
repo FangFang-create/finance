@@ -40,16 +40,17 @@ def job_daily() -> None:
         return
 
     usd = pi["usd_per_oz"]
-    log.info("当前金价: $%.2f/oz  ¥%.2f/g", usd, pi["cny_per_gram"])
+    cny = pi["cny_per_gram"]
+    log.info("当前金价: $%.2f/oz  ¥%.2f/g", usd, cny)
 
     summary    = get_summary()
     event_data = analyze_events()
     advice     = get_advice(pi, summary)
 
-    below_threshold = usd < PRICE_THRESHOLD
+    below_threshold = cny < PRICE_THRESHOLD
 
     if below_threshold:
-        log.info("金价低于阈值 $%s，推送建仓信号", PRICE_THRESHOLD)
+        log.info("金价低于阈值 ¥%s/g，推送建仓信号", PRICE_THRESHOLD)
         ok = feishu_bot.notify_price_alert(pi, summary, advice)
     elif event_data.get("has_major_event"):
         log.info("发现重大市场事件，推送事件通知")
@@ -65,7 +66,7 @@ def run() -> None:
     """Agent 入口。"""
     log.info("=== 黄金配置 Agent 启动 ===")
     log.info("  推送时间:   每日 %s", DAILY_REPORT_TIME)
-    log.info("  价格阈值:   $%s/oz", PRICE_THRESHOLD)
+    log.info("  价格阈值:   ¥%s/g（人民币/克）", PRICE_THRESHOLD)
     log.info("  飞书 Webhook: %s", "已配置 ✓" if FEISHU_WEBHOOK_URL else "❌ 未配置，请检查 .env")
 
     if not FEISHU_WEBHOOK_URL:

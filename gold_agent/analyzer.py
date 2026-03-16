@@ -54,7 +54,7 @@ _ADVICE_TMPL = """你是专业的黄金投资顾问，请根据以下信息给�
 【当前行情】
 - 金价（美元/盎司）：{usd_oz}
 - 金价（人民币/克）：{cny_g}
-- 建仓触发阈值：{threshold} USD/oz（当前价格{"已低于" if below else "高于"}阈值）
+- 建仓触发阈值：¥{threshold}/g（当前价格{"已低于" if below else "高于"}阈值）
 
 【投资者参数】
 - 总资产：¥{total_budget:,}
