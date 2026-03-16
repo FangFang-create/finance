@@ -25,10 +25,8 @@ MONTHLY_LIMIT       = 2_000     # 每月最大建仓金额（人民币）
 ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY", "")
 FEISHU_WEBHOOK_URL  = os.getenv("FEISHU_WEBHOOK_URL", "")
 
-# ── 调度间隔（分钟）────────────────────────────────────────────────────────
-PRICE_CHECK_INTERVAL  = 60    # 价格检查频率
-EVENT_CHECK_INTERVAL  = 360   # 重大事件检查频率（6 小时）
-DAILY_REPORT_TIME     = "09:00"  # 每日报告推送时间（HH:MM）
+# ── 推送时间 ─────────────────────────────────────────────────────────────────
+DAILY_REPORT_TIME   = "10:00"  # 每日推送时间（HH:MM，24 小时制）
 
 # ── 汇率（用于 USD→CNY 换算，生产环境建议接实时汇率 API）────────────────────
 USD_CNY_RATE = 7.2
