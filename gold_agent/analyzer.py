@@ -15,6 +15,8 @@ from config import (
     MONTHLY_LIMIT,
     GOLD_BUDGET,
     TOTAL_BUDGET,
+    USD_CNY_RATE,
+    TROY_OZ_TO_GRAM,
 )
 
 log = logging.getLogger(__name__)
@@ -54,7 +56,7 @@ _ADVICE_TMPL = """你是专业的黄金投资顾问，请根据以下信息给�
 【当前行情】
 - 金价（美元/盎司）：{usd_oz}
 - 金价（人民币/克）：{cny_g}
-- 建仓触发阈值：¥{threshold}/g（当前价格{"已低于" if below else "高于"}阈值）
+- 建仓触发阈值：${threshold_usd:.0f}/oz（当前价格{"已低于" if below else "高于"}阈值）
 
 【投资者参数】
 - 总资产：¥{total_budget:,}
@@ -93,11 +95,12 @@ def get_advice(price_info: dict, summary: dict) -> str:
     """根据行情和账户状态，调用 Claude 生成建仓建议文字。"""
     usd_oz = price_info.get("usd_per_oz", 0)
     cny_g  = price_info.get("cny_per_gram", 0)
-    below  = usd_oz < PRICE_THRESHOLD
+    below  = cny_g < PRICE_THRESHOLD
+    threshold_usd = PRICE_THRESHOLD * TROY_OZ_TO_GRAM / USD_CNY_RATE
     prompt = _ADVICE_TMPL.format(
         usd_oz=f"{usd_oz:.2f}",
         cny_g=f"{cny_g:.2f}",
-        threshold=PRICE_THRESHOLD,
+        threshold_usd=threshold_usd,
         below=below,
         total_budget=summary["total_budget"],
         gold_budget=summary["gold_budget"],
